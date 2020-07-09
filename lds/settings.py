@@ -27,7 +27,9 @@ SECRET_KEY = '^plout_f##hv%oet7c4h4gg=#gs_kq*we+h5t+piflpv1fu#fw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ldsappdev.herokuapp.com']
+ALLOWED_HOSTS = ['ldsappdev.herokuapp.com',
+os.environ.get("APP_BASE_URL", default="127.0.0.1"),
+]
 
 
 # Application definition
@@ -40,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ldsapp',
+    'ldsapi.apps.LdsapiConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
