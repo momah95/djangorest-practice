@@ -17,15 +17,20 @@ import django_heroku
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Add .env variables 
+# Add .env variables anywhere before SECRET_KEY
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^plout_f##hv%oet7c4h4gg=#gs_kq*we+h5t+piflpv1fu#fw'
+SECRET_KEY = os.environ.get('SECRET_KEY', default="test")
+
+#^plout_f##hv%oet7c4h4gg=#gs_kq*we+h5t+piflpv1fu#fw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get('DEBUG',default=1))
 
 ALLOWED_HOSTS = ['ldsappdev.herokuapp.com',
 os.environ.get("APP_BASE_URL", default="127.0.0.1"),
@@ -41,9 +46,29 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    #my apps
     'ldsapp',
     'ldsapi.apps.LdsapiConfig',
+    
+    #rest_framework
     'rest_framework',
+    # "rest_framework_api_key"
+    'rest_framework.authtoken',
+    #corsheaders
+    'rest_auth',
+
+    #registration
+   'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+
+    # social auth 
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -58,12 +83,19 @@ MIDDLEWARE = [
 
 ]
 
+# emaillogin_project/settings.py
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+SITE_ID = 1
+
 ROOT_URLCONF = 'lds.urls'
 
+TEMPLATES_ROOT = os.path.join(BASE_DIR, "templates")
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_ROOT],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,3 +162,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = []
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+#Activate Django-Heroku
+django_heroku.settings(locals())

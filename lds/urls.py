@@ -18,5 +18,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    #my apps
     path('', include('ldsapi.urls')),
+    path('ldsapp/', include('ldsapp.urls')),
 ]
