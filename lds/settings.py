@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     
     #my apps
     'ldsapp',
-    'ldsapi.apps.LdsapiConfig',
+    'ldsapi',
     
     #rest_framework
     'rest_framework',
